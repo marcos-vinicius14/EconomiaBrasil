@@ -1,7 +1,44 @@
 ﻿@page "/"
 
-<PageTitle>Home</PageTitle>
+<MudContainer MaxWidth="MaxWidth.Small">
+    <MudText
+        Typo="Typo.h1"
+        Align="Align.Center">
+        Taxa Selic Brasil
+    </MudText>
+</MudContainer>
 
-<h1>Hello, world!</h1>
+<MudContainer MaxWidth="MaxWidth.Medium" Class="pa-2">
+    <MudCard>
+        <MudCardContent>
+            <MudText Class="pa-4" Typo="Typo.h6">Veja de forma rápida a taxa SELIC do Brasil e as motivações para sua decisão.</MudText>
+            <MudSpacer Class="pa-3">
+                <MudText Typo="Typo.body2" Class="pa-2">
+                    A taxa SELIC é a taxa de juros básica da economia, que influencia outras taxas de juros, como empréstimos e financiamentos.
+                </MudText>
+            </MudSpacer>
+        </MudCardContent>
+        <MudCardActions>
+            <MudButton Variant="Variant.Text" Color="Color.Primary">Quer mais detalhes?</MudButton>
+        </MudCardActions>
+    </MudCard>
+</MudContainer>
 
-Welcome to your new app.
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="pa-2">
+    <MudCard Class="d-flex flex-column">
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText Typo="Typo.h6" Align="Align.Center">Taxa de 10% ao ano</MudText>
+                <MudText Typo="Typo.h6" Align="Align.Center" Class="pa-2">07-06-2024</MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudText Typo="Typo.body2">
+                Where does it come from?
+                Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
+                The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham
+            </MudText>
+        </MudCardContent>
+    </MudCard>
+</MudContainer>
