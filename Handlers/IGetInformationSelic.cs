@@ -1,9 +1,10 @@
-﻿using EconomiaBrasil.Requests;
+﻿using EconomiaBrasil.Models;
+using EconomiaBrasil.Responses;
 
 namespace EconomiaBrasil.Handlers;
 
 public interface IGetInformationSelic
 {
-    Task<IEnumerable<ListAtasModels>> GetInformationSelic(int numberOfAtas = 1);
-    Task<ComunicadoModel> DetailsSelic();
+    Task<List<Response<ReuniaoModel>>> GetAtas(int numberOfAtas = 1);
+    Task<List<Response<ComunicadoModel>>> GetComunicados();
 }

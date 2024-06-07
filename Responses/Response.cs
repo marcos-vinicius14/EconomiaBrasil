@@ -1,15 +1,14 @@
 ﻿using System.Text.Json.Serialization;
-using EconomiaBrasil.Models;
 
 namespace EconomiaBrasil.Responses;
 
-public class ReuniaoResponse<TData>
+public class Response<TData>
 {
     [JsonConstructor]
-    public ReuniaoResponse()
+    public Response()
         => _statusCode = Configuration.DefaultStatusCode;
 
-    public ReuniaoResponse(
+    public Response(
         TData? data,
         int statusCode = 200,
         string message = null)
@@ -18,7 +17,7 @@ public class ReuniaoResponse<TData>
         _statusCode = statusCode;
         Message = message;
     }
-    private int _statusCode = Configuration.DefaultStatusCode;
+    private int _statusCode;
     public TData? Data { get; set; }
     public string? Message { get; set; }
     public bool IsSucess => _statusCode is >= 200 and <= 299;
