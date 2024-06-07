@@ -21,6 +21,8 @@
 
     <ItemGroup>
       <Compile Remove="wwwroot\css\bootstrap\**" />
+      <Compile Remove="Handlers\IGetContentSelic.cs" />
+      <Compile Remove="Models\ResponseModel.cs" />
     </ItemGroup>
 
     <ItemGroup>
