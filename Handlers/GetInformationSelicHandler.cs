@@ -7,54 +7,66 @@ namespace EconomiaBrasil.Handlers;
 public class GetInformationSelicHandler : IGetInformationSelic
 {
     private readonly IHttpClientFactory _httpClientFactory;
+    private readonly JsonSerializerOptions _serializerOptions;
 
     public GetInformationSelicHandler(IHttpClientFactory httpClientFactory)
     {
         _httpClientFactory = httpClientFactory;
+        _serializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
     }
 
-    public async Task<Response<ReuniaoModel>> GetLastAta(int numberOfAtas = 1)
+    public async Task<List<ReuniaoModel>?> GetLastAta(int numberOfAtas = 1)
     {
         var client = _httpClientFactory.CreateClient("ListATAS");
-        Console.WriteLine(Configuration.ListAtasUrl);
         using (var response = await client.GetAsync(Configuration.ListAtasUrl))
         {
+            //response.Headers.Add("Access-Control-Allow-Origin", new[]{ " * "});
+            
             if (response.IsSuccessStatusCode)
             {
                 var result = await response.Content.ReadAsStreamAsync();
-                var listAtas = await JsonSerializer.DeserializeAsync<Response<ReuniaoModel>>(result);
+                var reuniaoResponses = await JsonSerializer.DeserializeAsync<ReuniaoResponse>(result, _serializerOptions);
+                var reunioes = reuniaoResponses?.Conteudo;
 
-                return listAtas
-                       ?? new Response<ReuniaoModel>(null, 404, "Não foi possível encontrar uma reunião.");
+                return reunioes;
             }
             else
             {
-                return new Response<ReuniaoModel>(null, 500, "Erro ao realizar a requisição.");
+                return null;
             }
         }
     }
 
-    public async Task<Response<ComunicadoModel>> GetLatestAnnouncement()
+    public async Task<List<ComunicadoModel>> GetLatestAnnouncement()
     {
         var client = _httpClientFactory.CreateClient("DetailsSelic");
         var numberOfLastAta = await GetLastAta();
+        var reuniao = 0;
 
-        if (numberOfLastAta.Data is null)
-            return new Response<ComunicadoModel>(null, 404, "Não foi possível encontrar a ATA da reunião");
+        if (numberOfLastAta is null)
+            return null;
 
-        using (var response = await client.GetAsync(Configuration.DetailsSelicUrl + numberOfLastAta.Data.nroReuniao))
+        foreach (var numberAta in numberOfLastAta)
         {
+            reuniao = numberAta.NroReuniao;
+        }
+
+        using (var response = await client.GetAsync(Configuration.DetailsSelicUrl + reuniao))
+        {
+            //response.Headers.Add("Access-Control-Allow-Origin", new[]{ " * "});
             if (response.IsSuccessStatusCode)
             {
                 var result = await response.Content.ReadAsStreamAsync();
-                var lastAnnouncement = await JsonSerializer.DeserializeAsync<Response<ComunicadoModel>>(result);
+                var lastAnnouncement = await JsonSerializer.DeserializeAsync<ComunicadoResponse>(result, _serializerOptions);
+                var comunicados = lastAnnouncement.Conteudo;
 
-                return lastAnnouncement
-                       ?? new Response<ComunicadoModel>(null, 404, "Não foi possível encontrar o último comunicado.");
+                return comunicados
+                    ?? [];
+
             }
             else
             {
-                return new Response<ComunicadoModel>(null, 404, "Não foi possível encontrar uma reunião.");
+                return null;
             }
         }
     }
