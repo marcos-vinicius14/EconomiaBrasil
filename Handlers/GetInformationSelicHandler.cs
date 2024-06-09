@@ -1,17 +1,23 @@
-﻿
-using System.Text.Json;
+﻿using System.Text.Json;
 using EconomiaBrasil.Models;
 using EconomiaBrasil.Responses;
 
 namespace EconomiaBrasil.Handlers;
 
-public class GetInformationSelicHandler(IHttpClientFactory httpClientFactory) : IGetInformationSelic
+public class GetInformationSelicHandler : IGetInformationSelic
 {
-    private readonly HttpClient _client = httpClientFactory.CreateClient(Configuration.HttpClientName);
-    
+    private readonly IHttpClientFactory _httpClientFactory;
+
+    public GetInformationSelicHandler(IHttpClientFactory httpClientFactory)
+    {
+        _httpClientFactory = httpClientFactory;
+    }
+
     public async Task<Response<ReuniaoModel>> GetLastAta(int numberOfAtas = 1)
     {
-        using (var response = await _client.GetAsync(Configuration.ListAtasUrl + numberOfAtas))
+        var client = _httpClientFactory.CreateClient("ListATAS");
+        Console.WriteLine(Configuration.ListAtasUrl);
+        using (var response = await client.GetAsync(Configuration.ListAtasUrl))
         {
             if (response.IsSuccessStatusCode)
             {
@@ -19,7 +25,7 @@ public class GetInformationSelicHandler(IHttpClientFactory httpClientFactory) : 
                 var listAtas = await JsonSerializer.DeserializeAsync<Response<ReuniaoModel>>(result);
 
                 return listAtas
-                    ?? new Response<ReuniaoModel>(null, 404, "Não foi possível encontrar uma reunião.");
+                       ?? new Response<ReuniaoModel>(null, 404, "Não foi possível encontrar uma reunião.");
             }
             else
             {
@@ -30,16 +36,21 @@ public class GetInformationSelicHandler(IHttpClientFactory httpClientFactory) : 
 
     public async Task<Response<ComunicadoModel>> GetLatestAnnouncement()
     {
+        var client = _httpClientFactory.CreateClient("DetailsSelic");
         var numberOfLastAta = await GetLastAta();
-        using (var response = await _client.GetAsync(Configuration.DetailsSelicUrl + numberOfLastAta))
+
+        if (numberOfLastAta.Data is null)
+            return new Response<ComunicadoModel>(null, 404, "Não foi possível encontrar a ATA da reunião");
+
+        using (var response = await client.GetAsync(Configuration.DetailsSelicUrl + numberOfLastAta.Data.nroReuniao))
         {
             if (response.IsSuccessStatusCode)
             {
                 var result = await response.Content.ReadAsStreamAsync();
                 var lastAnnouncement = await JsonSerializer.DeserializeAsync<Response<ComunicadoModel>>(result);
-                
+
                 return lastAnnouncement
-                    ?? new Response<ComunicadoModel>(null, 404, "Não foi possível encontrar o último comunicado.");
+                       ?? new Response<ComunicadoModel>(null, 404, "Não foi possível encontrar o último comunicado.");
             }
             else
             {
