@@ -2,5 +2,8 @@
 
 public class ReuniaoModel
 {
-    public int nroReuniao { get; set; } = 1;
+    public int NroReuniao { get; set; }
+    public string dataReferencia { get; set; } = string.Empty;
+    public string dataPublicacao { get; set; } = string.Empty;
+    public string titulo { get; set; } = string.Empty;
 }

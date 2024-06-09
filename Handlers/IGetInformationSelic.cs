@@ -5,6 +5,6 @@ namespace EconomiaBrasil.Handlers;
 
 public interface IGetInformationSelic
 {
-    Task<Response<ReuniaoModel>> GetLastAta(int numberOfAtas = 1);
-    Task<Response<ComunicadoModel>> GetLatestAnnouncement();
+    Task<List<ReuniaoModel>?> GetLastAta(int numberOfAtas = 1);
+    Task<List<ComunicadoModel>> GetLatestAnnouncement();
 }

@@ -1,7 +1,9 @@
-﻿using EconomiaBrasil.Handlers;
+﻿using System.Text.RegularExpressions;
+using EconomiaBrasil.Handlers;
 using EconomiaBrasil.Models;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
+using System.Web;
 
 namespace EconomiaBrasil.Pages;
 
@@ -35,7 +37,7 @@ public partial class HomePage : ComponentBase
         {
             Comunicado.nro_reuniao = comunicado.nro_reuniao;
             Comunicado.Titulo = comunicado.Titulo;
-            Comunicado.TextoComunicado = comunicado.TextoComunicado;
+            Comunicado.TextoComunicado = HttpUtility.HtmlDecode(Regex.Replace(comunicado.TextoComunicado, "<.*?>", String.Empty)) ;
             Comunicado.DataReferencia = comunicado.DataReferencia;
         }
         
